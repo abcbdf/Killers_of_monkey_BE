@@ -1,3 +1,4 @@
+let handleSynchronousClient = require('./handler');
 var prefix = 'D:/Program File/nodejs/node_global/node_modules/'
 var WebSocketServer = require(prefix + 'ws').Server,
 wss = new WebSocketServer({ port: 8181 });
@@ -8,9 +9,11 @@ wss.on('connection', function (ws) {
     //     console.log(message);
     // });
     ws.on('message', function(m){
+        
         //console.log(m)
         obj = JSON.parse(m);
-        console.log(obj);
+        handleSynchronousClient.call(this, ws, obj);
+        //console.log(obj);
     })
 });
 
