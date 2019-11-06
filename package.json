@@ -1,0 +1,29 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "monkey_game",
+  "main": "src/server.ts",
+  "scripts": {
+    "start": "ts-node src/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abcbdf/Killers_of_monkey_BE.git"
+  },
+  "author": "abcbdf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abcbdf/Killers_of_monkey_BE/issues"
+  },
+  "homepage": "https://github.com/abcbdf/Killers_of_monkey_BE#readme",
+  "devDependencies": {
+    "@types/node": "^12.7.12",
+    "@types/seedrandom": "^2.4.28",
+    "@types/uuid": "^3.4.5",
+    "@types/ws": "^6.0.3",
+    "seedrandom": "^3.0.5",
+    "uuid": "^3.3.3",
+    "ws": "^7.1.2"
+  }
+}
