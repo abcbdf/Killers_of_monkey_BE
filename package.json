@@ -4,7 +4,7 @@
   "description": "monkey_game",
   "main": "src/server.ts",
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "ts-node src/Server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

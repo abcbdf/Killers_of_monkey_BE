@@ -2,5 +2,9 @@ export {Message};
 
 interface Message {
     type: string,
-    [propName: string]: any;
+    msg?: string,
+    roomNumber?: string,
+    memberId?: string,
+    userId?: string,
+    //[propName: string]: any;
 }

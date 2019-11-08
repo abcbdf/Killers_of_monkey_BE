@@ -1,6 +1,7 @@
 export {prepare}
 
 import {Message} from "./msg";
+import {Data} from "./Data";
 
 
 import * as seedrandom from "seedrandom";
@@ -9,54 +10,58 @@ import * as WebSocket from "ws";
 
 
 
-function prepare(ws : WebSocket, args : Message, waitPairQueue, memoryData, existUserGameRoomMap){
+function prepare(ws : WebSocket, args : Message, dW: Data){
     //var obj = {type: "PREPARE", userId: uuidv4()}
     let userId = uuid.v4();
     console.log("connect userId: " + userId);
-    if (waitPairQueue.length == 0){
+    if (dW.waitPairQueue.length == 0){
         
         //let socket = ws;        
-        waitPairQueue.push({userId, ws});
+        dW.waitPairQueue.push({"userId": userId, "ws": ws});
         let obj = {type: "WAITE"};
         ws.send(JSON.stringify(obj));
     }
     else
     {
-        let waitPlayer = waitPairQueue.splice(0, 1)[0];
+        let waitPlayer = dW.waitPairQueue.splice(0, 1)[0];
         let roomNumber = uuid.v4();
         let seed : number = Math.floor(Math.random() * 10000);
 
         // 初始化游戏数据
         waitPlayer.roomNumber = roomNumber; 
-        memoryData[roomNumber] = {
+        dW.roomDataDic[roomNumber] = {
             "one": waitPlayer,
             "two": {
-                userId, ws, roomNumber
+                "userId": userId,
+                "ws": ws,
+                "roomNumber": roomNumber,
             },
-            seed, // 随机数种子
-            rand: seedrandom(seed.toString()), // 随机方法
+            "seed": seed, // 随机数种子
+            "rand": seedrandom(seed.toString()), // 随机方法
         };
 
-        existUserGameRoomMap[userId] = roomNumber;
-        existUserGameRoomMap[waitPlayer.userId] = roomNumber;
+        dW.existUserGameRoomMap[userId] = roomNumber;
+        dW.existUserGameRoomMap[waitPlayer.userId] = roomNumber;
 
         // 进入房间
         // socket.join(roomNumber);
         // waitPlayer.socket.join(roomNumber);
 
         // 游戏初始化完成，发送游戏初始化数据
-        waitPlayer.ws.send(JSON.stringify({
+        let obj: Message = {
             "type": "START",
-            roomNumber,
+            "roomNumber": roomNumber,
             "memberId": "one",
             "userId": waitPlayer.userId,
-        }));
-        ws.send(JSON.stringify({
+        };
+        waitPlayer.ws.send(JSON.stringify(obj));
+        obj = {
             "type": "START",
-            roomNumber,
+            "roomNumber": roomNumber,
             "memberId": "two",
             "userId": userId,
-        }));
+        };
+        ws.send(JSON.stringify(obj));
         console.log("start room: " + roomNumber);
 
         initCard(roomNumber);
@@ -64,7 +69,7 @@ function prepare(ws : WebSocket, args : Message, waitPairQueue, memoryData, exis
     }
 }
 
-function initCard(roomNumber) {
+function initCard(roomNumber: string) {
     // let random = memoryData[roomNumber].rand() * 2;
 
     // let first = random >= 1 ? "one" : "two"; // 判断当前是哪个玩家出牌

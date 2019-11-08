@@ -1,8 +1,14 @@
 {
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "module": "commonjs", 
+        "target": "es5",
+    },
     "include": [
-        "*.ts*"
-    ],
-    "exclude": [
-
-    ]
+        "src/*.ts"
+      ],
+      "exclude": [
+        "node_modules"
+      ]
 }
