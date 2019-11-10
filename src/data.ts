@@ -1,22 +1,40 @@
-export {dataWhole, Data};
+export {dataWhole, Data, UserInfo, RoomData};
 import * as fs from 'fs';
 import * as WebSocket from "ws";
 import * as seedrandom from "seedrandom";
 import {const_card_list, CardData} from "./Card";
 
-interface UserInfo
+class UserInfo
 {
     userId: string;
     ws: WebSocket;
-    roomNumber?: string;
+    roomNumber: string;
+    handCard: CardData[];
+    constructor(userId: string, ws: WebSocket, roomNumber: string = "no Room")
+    {
+        this.userId = userId;
+        this.ws = ws;
+        this.roomNumber = roomNumber;
+        this.handCard = [];
+    }
 }
 
-interface RoomData
+class RoomData
 {
-    one: UserInfo;
-    two: UserInfo;
-    seed: Number;
+    users: [UserInfo, UserInfo];
+    currentPlayer: number;
+    // one: UserInfo;
+    // two: UserInfo;
+    seed: number;
     rand: seedrandom.prng;
+    remainingCards: CardData[];
+    constructor(one: UserInfo, two: UserInfo, seed: number, rand: seedrandom.prng)
+    {
+        this.users = [one, two];
+        this.seed = seed;
+        this.rand = rand;
+        this.remainingCards = [];
+    }
 
 }
 
@@ -24,14 +42,14 @@ class Data
 {
     waitPairQueue: UserInfo[];
     roomDataDic: {[keys: string] : RoomData};
-    existUserGameRoomMap: {[keys: string] : string};
+    existUserMap: {[keys: string] : UserInfo};
     cardList: ReadonlyArray<CardData>;
 
     constructor() 
     { 
         this.waitPairQueue = [];
         this.roomDataDic = {};
-        this.existUserGameRoomMap = {};
+        this.existUserMap = {};
         this.cardList = const_card_list;
         // var contents : Buffer = fs.readFileSync("data.json");
         // const card_list  = JSON.parse(contents.toString());

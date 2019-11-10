@@ -6,10 +6,10 @@ import * as WebSocket from "ws";
 // // //import seedrandom from 
 // // const seedrandom = require(prefix + "seedrandom");
 // const uuidv4 = require(prefix + 'uuid');
-import {shuffle} from "./Utils";
+import {shuffle} from "./CardUtils";
 import {Message} from "./Msg";
 import {prepare} from "./Prepare";
-import {dataWhole} from "./Data";
+import {dataWhole, Data} from "./Data";
 
 
 // var contents : Buffer = fs.readFileSync("data.json");
@@ -22,26 +22,29 @@ import {dataWhole} from "./Data";
 //const{card_dic}= fs.readFileSync("data.json");
 //console.log(card_dic);
 
-export {handleSynchronousClient, disconnect};
+export {handleSynchronousClient, disconnect, BaseHandler};
+
+interface BaseHandler{
+    (ws : WebSocket, args : Message, dW: Data): void;
+}
+
+let test: BaseHandler = function(ws : WebSocket, args : Message, dW: Data){
+    console.log("testing: " + args.msg);
+    let obj: Message = {type: "TEST", msg: "ffff"};
+    ws.send(JSON.stringify(obj));
+}
+
+/*don't use 'this'*/
+const handlers: {[keys: string]: BaseHandler} = {
+    "TEST": test,
+    "READY": prepare,
+};
 
 function handleSynchronousClient(ws : WebSocket, args : Message) {
     //console.log(socket);
     //console.log(args);
-    switch (args.type) {
-        case "TEST":
-            test(ws, args);
-            break;
-        case "READY":
-            prepare(ws, args, dataWhole);
-            //deal(ws, args);
-            break;
-        // case "CONNECT":
-        //     connect(args, socket, socketServer);
-        //     break;
-        // case "ATTACK_CARD":
-        //     attackCard(args, socket);
-        //     break;
-    }
+    let handler: BaseHandler = handlers[args.type];
+    handler(ws, args, dataWhole);
 };
 
 function disconnect(ws : WebSocket){
@@ -58,9 +61,5 @@ function disconnect(ws : WebSocket){
     
 };
 
-function test(ws : WebSocket, args : Message){
-    console.log("testing: " + args.msg);
-    let obj: Message = {type: "TEST", msg: "ffff"};
-    ws.send(JSON.stringify(obj));
-}
+
 
