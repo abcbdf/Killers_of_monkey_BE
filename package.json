@@ -2,10 +2,12 @@
   "name": "server",
   "version": "1.0.0",
   "description": "monkey_game",
-  "main": "src/server.ts",
+  "main": "src/Main.ts",
   "scripts": {
-    "start": "ts-node src/Server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/Main.ts",
+    "debugStart": "node --inspect-brk=5858 -r ts-node/register src/Main.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -22,8 +24,34 @@
     "@types/seedrandom": "^2.4.28",
     "@types/uuid": "^3.4.5",
     "@types/ws": "^6.0.3",
+    "@typescript-eslint/eslint-plugin": "^2.11.0",
+    "@typescript-eslint/parser": "^2.11.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-typescript": "^0.14.0",
     "seedrandom": "^3.0.5",
     "uuid": "^3.3.3",
     "ws": "^7.1.2"
+  },
+  "dependencies": {
+    "@types/assert": "^1.4.3",
+    "@types/module-alias": "^2.0.0",
+    "assert": "^2.0.0",
+    "module-alias": "^2.2.2",
+    "typed-emitter": "^1.0.0",
+    "typescript": "^3.7.3"
+  },
+  "_moduleAliases": {
+    "@root": "src/"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "npm run debugStart",
+    "ext": "ts"
   }
 }
