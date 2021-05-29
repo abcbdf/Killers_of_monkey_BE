@@ -30,7 +30,7 @@
     "eslint-plugin-typescript": "^0.14.0",
     "seedrandom": "^3.0.5",
     "uuid": "^3.3.3",
-    "ws": "^7.1.2"
+    "ws": "^7.4.6"
   },
   "dependencies": {
     "@types/assert": "^1.4.3",
